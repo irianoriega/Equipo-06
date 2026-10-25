@@ -11,7 +11,7 @@ public class Jugador {
 	    private double peso;
 	    private EstadoJugador estado;
 
-	    public Jugador() {
+	    public Jugador(String string, int i, Posicion alero, int j, int k, int l, EstadoJugador lesionado) {
 	        estado = EstadoJugador.DISPONIBLE;
 	    }
 
