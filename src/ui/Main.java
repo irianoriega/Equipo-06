@@ -26,7 +26,7 @@ public class Main {
  
 		// Las ventanas Swing se crean dentro de invokeLater (forma recomendada)
 		SwingUtilities.invokeLater(() -> {
-			Ventanadashboard dashboard = new Ventanadashboard(jugadores);
+			VentanaDashboard dashboard = new VentanaDashboard(jugadores);
 			dashboard.setVisible(true);
 		});
 	}
