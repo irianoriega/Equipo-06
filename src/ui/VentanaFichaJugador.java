@@ -19,7 +19,7 @@ import clase.Jugador;
 import clase.Posicion;
  
 /**
- * Ventana (dialogo) con la ficha de un jugador.
+ * Ventana con la ficha de un jugador.
  * Sirve para tres cosas:
  *  - Anadir un jugador nuevo      -> new VentanaFichaJugador(padre, null, false)
  *  - Modificar un jugador         -> new VentanaFichaJugador(padre, jugador, false)
@@ -43,7 +43,7 @@ public class VentanaFichaJugador extends JDialog {
 	private JButton btnGuardar;
 	private JButton btnCancelar;
  
-	// Aqui se guarda el resultado cuando el usuario pulsa Guardar
+	
 	private Jugador resultado = null;
 	// id del jugador que se esta modificando (0 si es nuevo)
 	private int idOriginal = 0;
@@ -79,12 +79,12 @@ public class VentanaFichaJugador extends JDialog {
 	private void crearComponentes() {
 		setLayout(new BorderLayout());
  
-		// ---------- Panel de arriba: titulo ----------
+		// Panel de arriba: titulo
 		JLabel lblTitulo = new JLabel("Ficha del jugador", JLabel.CENTER);
 		lblTitulo.setBorder(new EmptyBorder(10, 10, 5, 10));
 		add(lblTitulo, BorderLayout.NORTH);
  
-		// ---------- Panel central: formulario (7 filas x 2 columnas) ----------
+		// Panel central 7x2: formulario 
 		JPanel panelForm = new JPanel(new GridLayout(8, 2, 5, 8));
 		panelForm.setBorder(new EmptyBorder(10, 20, 10, 20));
  
@@ -116,7 +116,7 @@ public class VentanaFichaJugador extends JDialog {
  
 		add(panelForm, BorderLayout.CENTER);
  
-		// ---------- Panel de abajo: botones ----------
+		// Panel de abajo: botones
 		JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		btnGuardar = new JButton("Guardar cambios");
 		btnCancelar = new JButton("Cancelar");
@@ -124,7 +124,7 @@ public class VentanaFichaJugador extends JDialog {
 		panelBotones.add(btnCancelar);
 		add(panelBotones, BorderLayout.SOUTH);
  
-		// ---------- Eventos de los botones ----------
+		// Eventos de los botones
 		btnGuardar.addActionListener(e -> guardar());
 		btnCancelar.addActionListener(e -> dispose()); // dispose() cierra la ventana
 	}
@@ -153,7 +153,6 @@ public class VentanaFichaJugador extends JDialog {
 		btnCancelar.setText("Cerrar");
 	}
  
-	/** Lee el formulario, comprueba los datos y crea el Jugador. */
 	private void guardar() {
 		String nombre = txtNombre.getText().trim();
 		String apellidos = txtApellidos.getText().trim();
@@ -195,7 +194,6 @@ public class VentanaFichaJugador extends JDialog {
 		}
 	}
  
-	/** Devuelve el jugador guardado, o null si el usuario cancelo. */
 	public Jugador getResultado() {
 		return resultado;
 	}

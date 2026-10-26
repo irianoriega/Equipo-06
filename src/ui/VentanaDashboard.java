@@ -25,24 +25,19 @@ import clase.EstadoJugador;
 import clase.Jugador;
 import clase.Posicion;
 import javax.swing.BorderFactory;
- 
-/**
- * Ventana principal (Dashboard) de HoopsManager.
- * Tiene pestanas: Inicio, Roster, Calendario, Estadisticas y Enfermeria.
- */
+
 public class VentanaDashboard extends JFrame {
  
 	private static final long serialVersionUID = 1L;
  
-	// Lista con todos los jugadores del equipo
 	private List<Jugador> jugadores;
  
-	// ----- Pestana Inicio -----
+	// inicio
 	private JLabel lblTotal;
 	private JLabel lblDisponibles;
 	private JLabel lblLesionados;
  
-	// ----- Pestana Roster -----
+	// roster
 	private JTextField txtBuscar;
 	private JComboBox<String> cmbPosicion;
 	private JTable tabla;
@@ -50,7 +45,7 @@ public class VentanaDashboard extends JFrame {
 	// Jugadores que se ven ahora mismo en la tabla (despues de buscar/filtrar)
 	private List<Jugador> jugadoresMostrados;
  
-	// ----- Pestana Enfermeria -----
+	// enfermeria
 	private DefaultListModel<String> modeloLesionados;
  
 	public VentanaDashboard(List<Jugador> jugadores) {
@@ -80,18 +75,17 @@ public class VentanaDashboard extends JFrame {
 		JPanel panel = new JPanel(new BorderLayout(10, 10));
 		panel.setBorder(new EmptyBorder(15, 15, 15, 15));
  
-		// --- Arriba: bienvenida ---
+		// bienvenida
 		JLabel lblBienvenida = new JLabel("Bienvenido a HoopsManager - Gestion de tu equipo de baloncesto",
 				JLabel.CENTER);
 		panel.add(lblBienvenida, BorderLayout.NORTH);
  
-		// --- Centro: 3 columnas (proximo partido / lideres / resumen) ---
 		JPanel centro = new JPanel(new GridLayout(1, 3, 10, 10));
  
 		// Columna 1: proximo partido
 		JPanel panelPartido = new JPanel(new BorderLayout());
 		panelPartido.setBorder(BorderFactory.createTitledBorder("Proximo partido"));
-		// TODO: cuando exista la clase Partido, mostrar aqui rival, fecha y lugar
+		// TODO: cuando exista la clase Partido mostrar rival, fecha y lugar
 		panelPartido.add(new JLabel("<html><center>Equipo local<br>VS<br>Equipo rival</center></html>",
 				JLabel.CENTER), BorderLayout.CENTER);
 		centro.add(panelPartido);
@@ -99,13 +93,13 @@ public class VentanaDashboard extends JFrame {
 		// Columna 2: lideres
 		JPanel panelLideres = new JPanel(new GridLayout(3, 1));
 		panelLideres.setBorder(BorderFactory.createTitledBorder("Lideres del equipo"));
-		// TODO: cuando exista la clase Estadistica, calcular los lideres de verdad
+		// TODO: calcular los lideres de verdad
 		panelLideres.add(new JLabel("Lideres en puntos: -", JLabel.CENTER));
 		panelLideres.add(new JLabel("Lideres en rebotes: -", JLabel.CENTER));
 		panelLideres.add(new JLabel("Lideres en asistencias: -", JLabel.CENTER));
 		centro.add(panelLideres);
  
-		// Columna 3: resumen de la plantilla (este si funciona con los datos reales)
+		// Columna 3: resumen de la plantilla
 		JPanel panelResumen = new JPanel(new GridLayout(3, 1));
 		panelResumen.setBorder(BorderFactory.createTitledBorder("Resumen de la plantilla"));
 		lblTotal = new JLabel("", JLabel.CENTER);
@@ -120,12 +114,12 @@ public class VentanaDashboard extends JFrame {
 		return panel;
 	}
  
-	// PESTAÑA ROSTER (plantilla)
+	// PESTAÑA ROSTER
 	private JPanel crearPanelRoster() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
  
-		// --- Arriba: buscador y filtro por posicion ---
+		// Arriba: buscador y filtro por posicion
 		JPanel panelArriba = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panelArriba.add(new JLabel("Buscar (nombre o dorsal):"));
 		txtBuscar = new JTextField(15);
@@ -144,7 +138,7 @@ public class VentanaDashboard extends JFrame {
  
 		panel.add(panelArriba, BorderLayout.NORTH);
  
-		// --- Centro: tabla de jugadores ---
+		// Centro: tabla de jugadores
 		String[] columnas = { "Dorsal", "Nombre", "Posicion", "Edad", "Altura (cm)", "Estado" };
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			private static final long serialVersionUID = 1L;
@@ -157,7 +151,7 @@ public class VentanaDashboard extends JFrame {
 		tabla = new JTable(modeloTabla);
 		panel.add(new JScrollPane(tabla), BorderLayout.CENTER);
  
-		// --- Abajo: botones ---
+		// Abajo: botones
 		JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		JButton btnAnadir = new JButton("Anadir");
 		JButton btnModificar = new JButton("Modificar");
@@ -169,7 +163,7 @@ public class VentanaDashboard extends JFrame {
 		panelBotones.add(btnVerFicha);
 		panel.add(panelBotones, BorderLayout.SOUTH);
  
-		// --- Eventos ---
+		// Eventos
 		btnBuscar.addActionListener(e -> actualizarTabla());
 		txtBuscar.addActionListener(e -> actualizarTabla()); // al pulsar Enter
 		cmbPosicion.addActionListener(e -> actualizarTabla());
