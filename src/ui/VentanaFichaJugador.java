@@ -126,7 +126,7 @@ public class VentanaFichaJugador extends JDialog {
  
 		// Eventos de los botones
 		btnGuardar.addActionListener(e -> guardar());
-		btnCancelar.addActionListener(e -> dispose()); // dispose() cierra la ventana
+		btnCancelar.addActionListener(e -> dispose());
 	}
  
 	private void rellenarFormulario(Jugador j) {
