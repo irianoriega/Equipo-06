@@ -1,6 +1,7 @@
 package ui;
  
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -18,11 +19,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
  
 import clase.EstadoJugador;
 import clase.Jugador;
+import clase.Partido;
 import clase.Posicion;
 import javax.swing.BorderFactory;
 
@@ -31,6 +34,7 @@ public class VentanaDashboard extends JFrame {
 	private static final long serialVersionUID = 1L;
  
 	private List<Jugador> jugadores;
+	private List<Partido> partidos;
  
 	// inicio
 	private JLabel lblTotal;
@@ -48,9 +52,10 @@ public class VentanaDashboard extends JFrame {
 	// enfermeria
 	private DefaultListModel<String> modeloLesionados;
  
-	public VentanaDashboard(List<Jugador> jugadores) {
+	public VentanaDashboard(List<Jugador> jugadores, List<Partido> partidos) {
 		super("HoopsManager - Equipo-06");
 		this.jugadores = jugadores;
+		this.partidos = partidos;
 		this.jugadoresMostrados = new ArrayList<>();
  
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -61,7 +66,7 @@ public class VentanaDashboard extends JFrame {
 		JTabbedPane pestanas = new JTabbedPane();
 		pestanas.addTab("Inicio", crearPanelInicio());
 		pestanas.addTab("Roster", crearPanelRoster());
-		pestanas.addTab("Calendario", crearPanelPendiente("Aqui ira el calendario de partidos"));
+		pestanas.addTab("Calendario", crearPanelCalendario());
 		pestanas.addTab("Estadisticas", crearPanelPendiente("Aqui iran las estadisticas del equipo"));
 		pestanas.addTab("Enfermeria", crearPanelEnfermeria());
  
@@ -175,6 +180,119 @@ public class VentanaDashboard extends JFrame {
 		return panel;
 	}
  
+	//PESTAÑA CALENDARIO
+	
+	private JPanel crearPanelCalendario() {
+		//panel principal
+		JPanel panel = new JPanel(new BorderLayout());
+		JLabel titulo = new JLabel("Calendario de partidos");
+		//añado el titulo en un label
+		panel.add(titulo, BorderLayout.NORTH);
+		titulo.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		//creo la tabla
+		String[] columnas = {"Fecha", "Rival", "Local/Visitante", "Resultado"};
+		
+		String[][] datos = new String[partidos.size()][4];
+		
+		for (int i = 0; i < partidos.size(); i++) {
+			Partido p = partidos.get(i);
+			
+			datos[i][0] = p.getFecha().toString();
+			datos[i][1] = p.getRival();
+			datos[i][2] = p.getLocalizacion().toString();
+			
+			if (p.tieneResultado()) {
+				datos[i][3] = p.getPuntosEquipo() + " - " + p.getPuntosRival();
+			} else {
+				datos[i][3] = "Pendiente";
+			}
+		}
+		
+		JTable tablaPartidos = new JTable(datos, columnas);
+		
+		//Añadir Resultados
+		JButton botonResultado = new JButton("Registrar resultado");
+		
+		panel.add(botonResultado, BorderLayout.SOUTH);
+		
+		//action listener para elegir el partido
+		botonResultado.addActionListener(e -> {
+			int fila = tablaPartidos.getSelectedRow();
+			//por si no elegimos fila
+			if (fila == -1) {
+				JOptionPane.showMessageDialog(this, "Selecciona primero un partido");
+				return;
+			}
+			
+			//creo los datos que iran en la ventana de añadir los resultados
+			//panel de la ventana
+			JPanel panelResultado = new JPanel(new GridLayout(2,2));
+			//textFields
+			JTextField campoEquipo = new JTextField();
+			JTextField campoRival = new JTextField();
+			//añado los datos a la ventana
+			panelResultado.add(new JLabel("Puntos de nuestro equipo: "));
+			panelResultado.add(campoEquipo);
+			panelResultado.add(new JLabel("Puntos del equipo rival: "));
+			panelResultado.add(campoRival);
+			
+			//aqui creo el JOptionPane
+			int opcion = JOptionPane.showConfirmDialog(
+					this, 
+					panelResultado, 
+					"Registrar resultado", 
+					JOptionPane.OK_CANCEL_OPTION
+				);
+			
+			//si selecciono OK
+			if (opcion == JOptionPane.OK_OPTION) {
+				//hago un try/catch para que si pongo otra cosa que no sea un numero en el recuadro salte una ventana de error
+				try {
+					int puntosEquipo = Integer.parseInt(campoEquipo.getText());
+					int puntosRival = Integer.parseInt(campoRival.getText());
+					
+					//tambien hago que los puntos no puedan ser negativos
+					if (puntosEquipo < 0 || puntosRival < 0) {
+				        JOptionPane.showMessageDialog(
+				            this,
+				            "Los puntos no pueden ser negativos.",
+				            "Dato incorrecto",
+				            JOptionPane.ERROR_MESSAGE
+				        );
+				        return;
+				    }
+					
+					//actualizo los resultados del partido
+					Partido partido = partidos.get(fila);
+					partido.registrarResultado(puntosEquipo, puntosRival);
+					//actualizo la tabla
+					tablaPartidos.setValueAt(
+							puntosEquipo + " - " + puntosRival,
+							fila, 
+							3
+						);
+					
+				} catch(NumberFormatException ex) {
+					JOptionPane.showMessageDialog(
+							this,
+							"Los puntos deben ser numeros enteros.", 
+							"Dato incorrecto",
+							JOptionPane.ERROR_MESSAGE
+						);
+				}
+			}
+		});
+		
+		//Le meto scroll a la tabla
+		JScrollPane scroll = new JScrollPane(tablaPartidos);
+		
+		panel.add(scroll, BorderLayout.CENTER);
+		
+		
+		return panel;
+	}
+	
 	// PESTAÑA ENFERMERIA
 	private JPanel crearPanelEnfermeria() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
@@ -273,7 +391,7 @@ public class VentanaDashboard extends JFrame {
 
  
 	/** Devuelve el jugador de la fila seleccionada, o null (con aviso) si no hay ninguna. */
-	private Jugador getJugadorSeleccionado() {
+	private Jugador getJugadorSeleccionado() { 
 		int fila = tabla.getSelectedRow();
 		if (fila == -1) {
 			JOptionPane.showMessageDialog(this, "Selecciona primero un jugador de la tabla.", "Aviso",
