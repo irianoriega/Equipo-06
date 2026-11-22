@@ -20,7 +20,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
- 
+
+import clase.Equipo;
 import clase.EstadoJugador;
 import clase.Jugador;
 import clase.Partido;
@@ -33,10 +34,12 @@ public class VentanaDashboard extends JFrame {
  
 	private List<Jugador> jugadores;
 	private List<Partido> partidos;
-	private JLabel lblProximoPartido;
-	private DefaultTableModel modeloPartidos;
- 
+	private Equipo equipo;
+	 
 	// Inicio
+	private JLabel lblPartidoEquipos;
+	private JLabel lblPartidoFecha;
+	private JLabel lblPartidoLugar;
 	private JLabel lblTotal;
 	private JLabel lblDisponibles;
 	private JLabel lblLesionados;
@@ -50,16 +53,19 @@ public class VentanaDashboard extends JFrame {
 	private List<Jugador> jugadoresMostrados;
  
 	// Calendario
+	private DefaultTableModel modeloPartidos;
 	private JTable tablaPartidos;
-	
+
 	// Enfermería
 	private DefaultListModel<String> modeloLesionados;
  
-	public VentanaDashboard(List<Jugador> jugadores, List<Partido> partidos) {
+	
+	public VentanaDashboard(List<Jugador> jugadores, List<Partido> partidos, Equipo equipo) {
 		super("HoopsManager - Equipo-06");
 		this.jugadores = jugadores;
 		this.jugadoresMostrados = new ArrayList<>();
 		this.partidos = partidos;
+		this.equipo = equipo;
  
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(800, 520);
@@ -91,10 +97,14 @@ public class VentanaDashboard extends JFrame {
 		JPanel centro = new JPanel(new GridLayout(1, 3, 10, 10));
  
 		// Columna 1: próximo partido
-		JPanel panelPartido = new JPanel(new BorderLayout());
+		JPanel panelPartido = new JPanel(new GridLayout(3,1));
 		panelPartido.setBorder(BorderFactory.createTitledBorder("Próximo partido"));
-		lblProximoPartido = new JLabel("", JLabel.CENTER);
-		panelPartido.add(lblProximoPartido, BorderLayout.CENTER);
+		lblPartidoEquipos = new JLabel("", JLabel.CENTER);
+		lblPartidoFecha = new JLabel("", JLabel.CENTER);
+		lblPartidoLugar = new JLabel("", JLabel.CENTER);
+		panelPartido.add(lblPartidoEquipos, BorderLayout.CENTER);
+		panelPartido.add(lblPartidoFecha, BorderLayout.CENTER);
+		panelPartido.add(lblPartidoLugar, BorderLayout.CENTER);
 		centro.add(panelPartido);
  
 		// Columna 2: líderes
@@ -402,9 +412,13 @@ public class VentanaDashboard extends JFrame {
 	    }
 
 	    if (proximoPartido != null) {
-	        lblProximoPartido.setText(proximoPartido + "VS " + proximoPartido.getRival() + " - " + proximoPartido.getFecha() + " (" + proximoPartido.getLocalizacion() + ")");
+	    	lblPartidoEquipos.setText(equipo.getNombre() + " VS " + proximoPartido.getRival());
+	    	lblPartidoFecha.setText("Fecha: " + proximoPartido.getFecha());
+	    	lblPartidoLugar.setText("Lugar: " + proximoPartido.getLocalizacion());
 	    } else {
-	        lblProximoPartido.setText("No hay partidos pendientes");
+	    	lblPartidoEquipos.setText("No hay partidos pendientes");
+	    	lblPartidoFecha.setText("");
+	    	lblPartidoLugar.setText("");
 	    }
 	}
 	

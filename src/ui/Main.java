@@ -6,9 +6,12 @@ import java.util.List;
  
 import javax.swing.SwingUtilities;
 
+import clase.Categoria;
+import clase.Equipo;
 import clase.EstadoJugador;
 import clase.Jugador;
 import clase.LocalizacionPartido;
+import clase.Nivel;
 import clase.Partido;
 import clase.Posicion;
 
@@ -30,7 +33,7 @@ public class Main {
 		partido1.registrarResultado(78, 65);
 		partidos.add(partido1 );
 		
-		Partido partido2 = new Partido(2, "Basket Madrid", LocalDate.of(2026, 11, 29), LocalizacionPartido.VISITANTE);
+		Partido partido2 = new Partido(2, "CB Madrid", LocalDate.of(2026, 11, 29), LocalizacionPartido.VISITANTE);
 		partido2.registrarResultado(62, 70);
 		partidos.add(partido2);
 		
@@ -39,10 +42,16 @@ public class Main {
 		partidos.add(partido3);
 		
 		partidos.add(new Partido(4, "CB Zaragoza", LocalDate.of(2026, 12, 13), LocalizacionPartido.VISITANTE));
-		partidos.add(new Partido(5, "CB Bilbao", LocalDate.of(2026, 12, 20), LocalizacionPartido.LOCAL));
+		partidos.add(new Partido(5, "CB Canarias", LocalDate.of(2026, 12, 20), LocalizacionPartido.LOCAL));
+		partidos.add(new Partido(6, "CB Burgos", LocalDate.of(2026, 12, 27), LocalizacionPartido.LOCAL));
+		partidos.add(new Partido(7, "CB Valencia", LocalDate.of(2027, 1, 3), LocalizacionPartido.LOCAL));
+		partidos.add(new Partido(8, "CB Murcia", LocalDate.of(2027, 1, 10), LocalizacionPartido.LOCAL));
+
+		// Mi equipo
+		Equipo equipo = new Equipo(1, "CB Bilbao", Categoria.SENIOR, Nivel.PROVINCIAL, "2026-2027");
 		
 		SwingUtilities.invokeLater(() -> {
-			VentanaDashboard dashboard = new VentanaDashboard(jugadores, partidos);
+			VentanaDashboard dashboard = new VentanaDashboard(jugadores, partidos, equipo);
 			dashboard.setVisible(true);
 		});
 	}
