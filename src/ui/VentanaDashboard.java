@@ -36,20 +36,23 @@ public class VentanaDashboard extends JFrame {
 	private JLabel lblProximoPartido;
 	private DefaultTableModel modeloPartidos;
  
-	// inicio
+	// Inicio
 	private JLabel lblTotal;
 	private JLabel lblDisponibles;
 	private JLabel lblLesionados;
  
-	// roster
+	// Roster
 	private JTextField txtBuscar;
 	private JComboBox<String> cmbPosicion;
 	private JTable tabla;
 	private DefaultTableModel modeloTabla;
-	// Jugadores que se ven ahora mismo en la tabla (despues de buscar/filtrar)
+	// Jugadores que se ven ahora mismo en la tabla (después de buscar/filtrar)
 	private List<Jugador> jugadoresMostrados;
  
-	// enfermeria
+	// Calendario
+	private JTable tablaPartidos;
+	
+	// Enfermería
 	private DefaultListModel<String> modeloLesionados;
  
 	public VentanaDashboard(List<Jugador> jugadores, List<Partido> partidos) {
@@ -62,12 +65,12 @@ public class VentanaDashboard extends JFrame {
 		setSize(800, 520);
 		setLocationRelativeTo(null); // centrada en la pantalla
  
-		// Las pestanas
+		// Las pestañas
 		JTabbedPane pestanas = new JTabbedPane();
 		pestanas.addTab("Inicio", crearPanelInicio());
 		pestanas.addTab("Roster", crearPanelRoster());
-		pestanas.addTab("Calendario", crearPanelPendiente("Aqui ira el calendario de partidos"));
-		pestanas.addTab("Estadísticas", crearPanelPendiente("Aqui iran las estadisticas del equipo"));
+		pestanas.addTab("Calendario", crearPanelCalendario());
+		pestanas.addTab("Estadísticas", crearPanelPendiente("Estadísticas del equipo"));
 		pestanas.addTab("Enfermería", crearPanelEnfermeria());
  
 		add(pestanas);
@@ -81,27 +84,26 @@ public class VentanaDashboard extends JFrame {
 		panel.setBorder(new EmptyBorder(15, 15, 15, 15));
  
 		// bienvenida
-		JLabel lblBienvenida = new JLabel("Bienvenido a HoopsManager - Gestion de tu equipo de baloncesto",
+		JLabel lblBienvenida = new JLabel("Bienvenido a HoopsManager - Gestión de tu equipo de baloncesto",
 				JLabel.CENTER);
 		panel.add(lblBienvenida, BorderLayout.NORTH);
  
 		JPanel centro = new JPanel(new GridLayout(1, 3, 10, 10));
  
-		// Columna 1: proximo partido
+		// Columna 1: próximo partido
 		JPanel panelPartido = new JPanel(new BorderLayout());
-		panelPartido.setBorder(BorderFactory.createTitledBorder("Proximo partido"));
-		// TODO: cuando exista la clase Partido mostrar rival, fecha y lugar
-		panelPartido.add(new JLabel("<html><center>Equipo local<br>VS<br>Equipo rival</center></html>",
-				JLabel.CENTER), BorderLayout.CENTER);
+		panelPartido.setBorder(BorderFactory.createTitledBorder("Próximo partido"));
+		lblProximoPartido = new JLabel("", JLabel.CENTER);
+		panelPartido.add(lblProximoPartido, BorderLayout.CENTER);
 		centro.add(panelPartido);
  
-		// Columna 2: lideres
+		// Columna 2: líderes
 		JPanel panelLideres = new JPanel(new GridLayout(3, 1));
-		panelLideres.setBorder(BorderFactory.createTitledBorder("Lideres del equipo"));
-		// TODO: calcular los lideres de verdad
-		panelLideres.add(new JLabel("Lideres en puntos: -", JLabel.CENTER));
-		panelLideres.add(new JLabel("Lideres en rebotes: -", JLabel.CENTER));
-		panelLideres.add(new JLabel("Lideres en asistencias: -", JLabel.CENTER));
+		panelLideres.setBorder(BorderFactory.createTitledBorder("Líderes del equipo"));
+		// TODO: calcular los líderes de verdad
+		panelLideres.add(new JLabel("Líderes en puntos: -", JLabel.CENTER));
+		panelLideres.add(new JLabel("Líderes en rebotes: -", JLabel.CENTER));
+		panelLideres.add(new JLabel("Líderes en asistencias: -", JLabel.CENTER));
 		centro.add(panelLideres);
  
 		// Columna 3: resumen de la plantilla
@@ -124,7 +126,7 @@ public class VentanaDashboard extends JFrame {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
  
-		// Arriba: buscador y filtro por posicion
+		// Arriba: buscador y filtro por posición
 		JPanel panelArriba = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		panelArriba.add(new JLabel("Buscar (nombre o dorsal):"));
 		txtBuscar = new JTextField(15);
@@ -133,7 +135,7 @@ public class VentanaDashboard extends JFrame {
 		JButton btnBuscar = new JButton("Buscar");
 		panelArriba.add(btnBuscar);
  
-		panelArriba.add(new JLabel("   Posicion:"));
+		panelArriba.add(new JLabel("   Posición:"));
 		cmbPosicion = new JComboBox<>();
 		cmbPosicion.addItem("Todas");
 		for (Posicion p : Posicion.values()) {
@@ -144,7 +146,7 @@ public class VentanaDashboard extends JFrame {
 		panel.add(panelArriba, BorderLayout.NORTH);
  
 		// Centro: tabla de jugadores
-		String[] columnas = { "Dorsal", "Nombre", "Posicion", "Edad", "Altura (cm)", "Estado" };
+		String[] columnas = { "Dorsal", "Nombre", "Posición", "Edad", "Altura (cm)", "Estado" };
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			private static final long serialVersionUID = 1L;
  
@@ -179,8 +181,28 @@ public class VentanaDashboard extends JFrame {
  
 		return panel;
 	}
+	
+	// PESTAÑA CALENDARIO
+	private JPanel crearPanelCalendario() {
+	    JPanel panel = new JPanel(new BorderLayout(5, 5));
+	    panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+	    String[] columnas = { "Fecha", "Rival", "Localización", "Resultado", "Estado" };
+	    modeloPartidos = new DefaultTableModel(columnas, 0) {
+	        private static final long serialVersionUID = 1L;
+
+	        @Override
+	        public boolean isCellEditable(int fila, int columna) {
+	            return false;
+	        }
+	    };
+	    tablaPartidos = new JTable(modeloPartidos);
+	    panel.add(new JScrollPane(tablaPartidos), BorderLayout.CENTER);
+
+	    return panel;
+	}
  
-	// PESTAÑA ENFERMERIA
+	// PESTAÑA ENFERMERÍA
 	private JPanel crearPanelEnfermeria() {
 		JPanel panel = new JPanel(new BorderLayout(5, 5));
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -191,11 +213,11 @@ public class VentanaDashboard extends JFrame {
 		JList<String> lista = new JList<>(modeloLesionados);
 		panel.add(new JScrollPane(lista), BorderLayout.CENTER);
  
-		// TODO: cuando exista la clase Lesion, mostrar tipo de lesion y fecha de recuperacion
+		// TODO: cuando exista la clase Lesion, mostrar tipo de lesión y fecha de recuperación
 		return panel;
 	}
  
-	// PESTAÑAS TODAVIA SIN HACER
+	// PESTAÑAS TODAVÍA SIN HACER
 	private JPanel crearPanelPendiente(String texto) {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(new JLabel(texto, JLabel.CENTER), BorderLayout.CENTER);
@@ -205,7 +227,7 @@ public class VentanaDashboard extends JFrame {
 	// ACCIONES DE LOS BOTONES
 	private void anadirJugador() {
 		VentanaFichaJugador ficha = new VentanaFichaJugador(this, null, false);
-		ficha.setVisible(true); // el programa se queda aqui hasta que se cierra la ficha
+		ficha.setVisible(true); // el programa se queda aquí hasta que se cierra la ficha
  
 		Jugador nuevo = ficha.getResultado();
 		if (nuevo != null) {
@@ -274,9 +296,8 @@ public class VentanaDashboard extends JFrame {
 		ficha.setVisible(true);
 	}
  
-	// METODOS AUXILIARES
+	// MÉTODOS AUXILIARES
 
- 
 	/** Devuelve el jugador de la fila seleccionada, o null (con aviso) si no hay ninguna. */
 	private Jugador getJugadorSeleccionado() {
 		int fila = tabla.getSelectedRow();
@@ -309,14 +330,16 @@ public class VentanaDashboard extends JFrame {
 		return max + 1;
 	}
  
-	/** Refresca todas las pestanas. */
+	/** Actualiza todas las pestañas. */
 	private void actualizarTodo() {
 		actualizarTabla();
 		actualizarResumen();
+		actualizarPartidos();
 		actualizarEnfermeria();
+		
 	}
- 
-	/** Rellena la tabla aplicando el buscador y el filtro de posicion. */
+
+	/** Rellena la tabla aplicando el buscador y el filtro de posición. */
 	private void actualizarTabla() {
 		modeloTabla.setRowCount(0); // vaciamos la tabla
 		jugadoresMostrados.clear();
@@ -325,7 +348,7 @@ public class VentanaDashboard extends JFrame {
 		String posicionElegida = (String) cmbPosicion.getSelectedItem();
  
 		for (Jugador j : jugadores) {
-			// Filtro por posicion
+			// Filtro por posición
 			boolean cumplePosicion = posicionElegida.equals("Todas")
 					|| j.getPosicion().toString().equals(posicionElegida);
  
@@ -355,7 +378,36 @@ public class VentanaDashboard extends JFrame {
 		lblDisponibles.setText("Disponibles: " + disponibles);
 		lblLesionados.setText("Lesionados: " + lesionados);
 	}
- 
+	
+	private void actualizarPartidos() {
+		modeloPartidos.setRowCount(0);
+	    Partido proximoPartido = null;
+
+	    for (Partido p : partidos) {
+	    	String resultado = "-";
+			String estado = "Próximo";
+
+			if (p.tieneResultado()) {
+				resultado = p.getPuntosEquipo() + " - " + p.getPuntosRival();
+				estado = "Finalizado";
+			}
+
+	        modeloPartidos.addRow(new Object[] {
+	            p.getFecha(), p.getRival(), p.getLocalizacion(), resultado, estado
+	        });
+
+	        if (!p.tieneResultado() && proximoPartido == null) {
+	            proximoPartido = p;
+	        }
+	    }
+
+	    if (proximoPartido != null) {
+	        lblProximoPartido.setText(proximoPartido + "VS " + proximoPartido.getRival() + " - " + proximoPartido.getFecha() + " (" + proximoPartido.getLocalizacion() + ")");
+	    } else {
+	        lblProximoPartido.setText("No hay partidos pendientes");
+	    }
+	}
+	
 	private void actualizarEnfermeria() {
 		modeloLesionados.clear();
 		for (Jugador j : jugadores) {

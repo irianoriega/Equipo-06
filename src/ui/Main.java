@@ -26,9 +26,18 @@ public class Main {
  
 		// Partidos
 		List<Partido> partidos = new ArrayList<>();
-		partidos.add(new Partido(1, "CB Valencia", LocalDate.of(2026, 11, 22), LocalizacionPartido.LOCAL));
-		partidos.add(new Partido(2, "Basket Madrid", LocalDate.of(2026, 11, 29), LocalizacionPartido.VISITANTE));
-		partidos.add(new Partido(3, "CB Sevilla", LocalDate.of(2026, 12, 6), LocalizacionPartido.LOCAL));
+		Partido partido1 = new Partido(1, "CB Valencia", LocalDate.of(2026, 11, 22), LocalizacionPartido.LOCAL);
+		partido1.registrarResultado(78, 65);
+		partidos.add(partido1 );
+		
+		Partido partido2 = new Partido(2, "Basket Madrid", LocalDate.of(2026, 11, 29), LocalizacionPartido.VISITANTE);
+		partido2.registrarResultado(62, 70);
+		partidos.add(partido2);
+		
+		Partido partido3 = new Partido(3, "CB Sevilla", LocalDate.of(2026, 12, 6), LocalizacionPartido.LOCAL);
+		partido3.registrarResultado(85, 80);
+		partidos.add(partido3);
+		
 		partidos.add(new Partido(4, "CB Zaragoza", LocalDate.of(2026, 12, 13), LocalizacionPartido.VISITANTE));
 		partidos.add(new Partido(5, "CB Bilbao", LocalDate.of(2026, 12, 20), LocalizacionPartido.LOCAL));
 		
