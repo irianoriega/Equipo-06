@@ -183,7 +183,7 @@ public class VentanaFichaJugador extends JDialog {
 			Posicion posicion = (Posicion) cmbPosicion.getSelectedItem();
 			EstadoJugador estado = (EstadoJugador) cmbEstado.getSelectedItem();
  
-			resultado = new Jugador(idOriginal, nombre, apellidos, dorsal, posicion, edad, altura, peso);
+			resultado = new Jugador(idOriginal, nombre, apellidos, dorsal, posicion, edad, altura, peso, estado);
 			resultado.setEstado(estado);
 			dispose(); // todo correcto: cerramos la ventana
  

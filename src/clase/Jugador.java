@@ -11,13 +11,9 @@ public class Jugador {
 	    private double peso;
 	    private EstadoJugador estado;
 
-	    public Jugador(String string, int i, Posicion alero, int j, int k, int l, EstadoJugador lesionado) {
-	        estado = EstadoJugador.DISPONIBLE;
-	    }
-
 	    public Jugador(int id, String nombre, String apellidos,
 	                   int dorsal, Posicion posicion, int edad,
-	                   double altura, double peso) {
+	                   double altura, double peso, EstadoJugador estado) {
 	        this.id = id;
 	        this.nombre = nombre;
 	        this.apellidos = apellidos;
@@ -26,7 +22,7 @@ public class Jugador {
 	        this.edad = edad;
 	        this.altura = altura;
 	        this.peso = peso;
-	        this.estado = EstadoJugador.DISPONIBLE;
+	        this.estado = estado;
 	    }
 
 	    public int getId() {
