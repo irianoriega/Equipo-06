@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
  
 import clase.EstadoJugador;
 import clase.Jugador;
+import clase.Partido;
 import clase.Posicion;
 import javax.swing.BorderFactory;
 
@@ -31,6 +32,9 @@ public class VentanaDashboard extends JFrame {
 	private static final long serialVersionUID = 1L;
  
 	private List<Jugador> jugadores;
+	private List<Partido> partidos;
+	private JLabel lblProximoPartido;
+	private DefaultTableModel modeloPartidos;
  
 	// inicio
 	private JLabel lblTotal;
@@ -48,10 +52,11 @@ public class VentanaDashboard extends JFrame {
 	// enfermeria
 	private DefaultListModel<String> modeloLesionados;
  
-	public VentanaDashboard(List<Jugador> jugadores) {
+	public VentanaDashboard(List<Jugador> jugadores, List<Partido> partidos) {
 		super("HoopsManager - Equipo-06");
 		this.jugadores = jugadores;
 		this.jugadoresMostrados = new ArrayList<>();
+		this.partidos = partidos;
  
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(800, 520);
@@ -62,8 +67,8 @@ public class VentanaDashboard extends JFrame {
 		pestanas.addTab("Inicio", crearPanelInicio());
 		pestanas.addTab("Roster", crearPanelRoster());
 		pestanas.addTab("Calendario", crearPanelPendiente("Aqui ira el calendario de partidos"));
-		pestanas.addTab("Estadisticas", crearPanelPendiente("Aqui iran las estadisticas del equipo"));
-		pestanas.addTab("Enfermeria", crearPanelEnfermeria());
+		pestanas.addTab("Estadísticas", crearPanelPendiente("Aqui iran las estadisticas del equipo"));
+		pestanas.addTab("Enfermería", crearPanelEnfermeria());
  
 		add(pestanas);
  
@@ -153,7 +158,7 @@ public class VentanaDashboard extends JFrame {
  
 		// Abajo: botones
 		JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		JButton btnAnadir = new JButton("Anadir");
+		JButton btnAnadir = new JButton("Añadir");
 		JButton btnModificar = new JButton("Modificar");
 		JButton btnEliminar = new JButton("Eliminar");
 		JButton btnVerFicha = new JButton("Ver ficha");
@@ -251,7 +256,7 @@ public class VentanaDashboard extends JFrame {
 		}
  
 		int respuesta = JOptionPane.showConfirmDialog(this,
-				"Seguro que quieres eliminar a " + seleccionado.getNombreCompleto() + "?", "Confirmar",
+				"¿Seguro que quieres eliminar a " + seleccionado.getNombreCompleto() + "?", "Confirmar",
 				JOptionPane.YES_NO_OPTION);
  
 		if (respuesta == JOptionPane.YES_OPTION) {
