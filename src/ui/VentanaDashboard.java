@@ -3,7 +3,9 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
  
 import javax.swing.DefaultListModel;
@@ -27,6 +29,8 @@ import clase.EstadoJugador;
 import clase.Jugador;
 import clase.Partido;
 import clase.Posicion;
+import clase.TipoEntrenamiento;
+
 import javax.swing.BorderFactory;
 
 public class VentanaDashboard extends JFrame {
@@ -239,6 +243,11 @@ public class VentanaDashboard extends JFrame {
 	    tablaEntrenamientos = new JTable(modeloEntrenamientos);
 	    panel.add(new JScrollPane(tablaEntrenamientos), BorderLayout.CENTER);
 
+	    JPanel panelArriba = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	    JButton btnAnadirEntrenamiento = new JButton("Añadir entrenamiento");
+	    panelArriba.add(btnAnadirEntrenamiento);
+	    panel.add(panelArriba, BorderLayout.NORTH);
+	    btnAnadirEntrenamiento.addActionListener(e -> anadirEntrenamiento());
 	    return panel;
 	}
 	
@@ -337,6 +346,26 @@ public class VentanaDashboard extends JFrame {
 		VentanaFichaJugador ficha = new VentanaFichaJugador(this, seleccionado, true);
 		ficha.setVisible(true);
 	}
+	
+	private void anadirEntrenamiento() {
+		int id = entrenamientos.size()+1;
+		String txtFecha = JOptionPane.showInputDialog(this, "Fecha");
+		LocalDate fecha = LocalDate.parse(txtFecha);
+		
+		JComboBox<TipoEntrenamiento> cmbTipoEntrenamiento = new JComboBox<>(TipoEntrenamiento.values());
+		Object[] cuadrado = {
+				"Tipo de entrenamiento",
+				cmbTipoEntrenamiento
+		};
+		JOptionPane.showMessageDialog(this, cuadrado, "Tipo", JOptionPane.QUESTION_MESSAGE);
+		TipoEntrenamiento tipo = (TipoEntrenamiento) cmbTipoEntrenamiento.getSelectedItem();
+		
+		String txtObservaciones = JOptionPane.showInputDialog(this, "Observaciones");
+		
+		Entrenamiento entrenamiento = new Entrenamiento(id, fecha, tipo, txtObservaciones);
+		entrenamientos.add(entrenamiento);
+		actualizarTodo();
+	}
  
 	// MÉTODOS AUXILIARES
 
@@ -377,6 +406,7 @@ public class VentanaDashboard extends JFrame {
 		actualizarTabla();
 		actualizarResumen();
 		actualizarPartidos();
+		actualizarEntrenamientos();
 		actualizarEnfermeria();
 		
 	}
@@ -452,6 +482,16 @@ public class VentanaDashboard extends JFrame {
 	    	lblPartidoFecha.setText("");
 	    	lblPartidoLugar.setText("");
 	    }
+	}
+	
+	private void actualizarEntrenamientos() {
+		modeloEntrenamientos.setRowCount(0);
+		
+		for (Entrenamiento e: entrenamientos) {
+			modeloEntrenamientos.addRow(new Object[] {
+		            e.getFecha(), e.getTipo(), e.getAsistentes().size() +"/"+ jugadores.size(), e.getObservaciones()
+		        });
+		}
 	}
 	
 	private void actualizarEnfermeria() {
