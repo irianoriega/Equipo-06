@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import clase.Entrenamiento;
 import clase.Equipo;
 import clase.EstadoJugador;
 import clase.Jugador;
@@ -35,6 +36,7 @@ public class VentanaDashboard extends JFrame {
 	private List<Jugador> jugadores;
 	private List<Partido> partidos;
 	private Equipo equipo;
+	private List<Entrenamiento> entrenamientos;
 	 
 	// Inicio
 	private JLabel lblPartidoEquipos;
@@ -60,12 +62,13 @@ public class VentanaDashboard extends JFrame {
 	private DefaultListModel<String> modeloLesionados;
  
 	
-	public VentanaDashboard(List<Jugador> jugadores, List<Partido> partidos, Equipo equipo) {
+	public VentanaDashboard(List<Jugador> jugadores, List<Partido> partidos, Equipo equipo, List<Entrenamiento> entrenamientos) {
 		super("HoopsManager - Equipo-06");
 		this.jugadores = jugadores;
 		this.jugadoresMostrados = new ArrayList<>();
 		this.partidos = partidos;
 		this.equipo = equipo;
+		this.entrenamientos = entrenamientos;
  
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(800, 520);
