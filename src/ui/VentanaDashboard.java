@@ -57,6 +57,12 @@ public class VentanaDashboard extends JFrame {
 	// Calendario
 	private DefaultTableModel modeloPartidos;
 	private JTable tablaPartidos;
+	
+	// Entrenamientos
+	private DefaultTableModel modeloEntrenamientos;
+	private JTable tablaEntrenamientos;
+	
+	// Estadísticas
 
 	// Enfermería
 	private DefaultListModel<String> modeloLesionados;
@@ -79,7 +85,8 @@ public class VentanaDashboard extends JFrame {
 		pestanas.addTab("Inicio", crearPanelInicio());
 		pestanas.addTab("Roster", crearPanelRoster());
 		pestanas.addTab("Calendario", crearPanelCalendario());
-		pestanas.addTab("Estadísticas", crearPanelPendiente("Estadísticas del equipo"));
+		pestanas.addTab("Entrenamientos", crearPanelEntrenamientos());
+		pestanas.addTab("Estadísticas", crearPanelEstadisticas());
 		pestanas.addTab("Enfermería", crearPanelEnfermeria());
  
 		add(pestanas);
@@ -214,6 +221,33 @@ public class VentanaDashboard extends JFrame {
 
 	    return panel;
 	}
+	
+	// PESTAÑA ENTRENAMIENTOS
+	private JPanel crearPanelEntrenamientos() {
+	    JPanel panel = new JPanel(new BorderLayout(5, 5));
+	    panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+	    String[] columnas = { "Fecha", "Tipo", "Asistencia", "Observaciones"};
+	    modeloEntrenamientos = new DefaultTableModel(columnas, 0) {
+	        private static final long serialVersionUID = 1L;
+
+	        @Override
+	        public boolean isCellEditable(int fila, int columna) {
+	            return false;
+	        }
+	    };
+	    tablaEntrenamientos = new JTable(modeloEntrenamientos);
+	    panel.add(new JScrollPane(tablaEntrenamientos), BorderLayout.CENTER);
+
+	    return panel;
+	}
+	
+	// PESTAÑA ESTADÍSTICAS
+	private JPanel crearPanelEstadisticas() {
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(new JLabel("Estadísticas del equipo", JLabel.CENTER), BorderLayout.CENTER);
+		return panel;
+	}
  
 	// PESTAÑA ENFERMERÍA
 	private JPanel crearPanelEnfermeria() {
@@ -226,16 +260,11 @@ public class VentanaDashboard extends JFrame {
 		JList<String> lista = new JList<>(modeloLesionados);
 		panel.add(new JScrollPane(lista), BorderLayout.CENTER);
  
-		// TODO: cuando exista la clase Lesion, mostrar tipo de lesión y fecha de recuperación
+		// TODO: con la clase Lesion, mostrar tipo de lesión y fecha de recuperación
 		return panel;
 	}
  
-	// PESTAÑAS TODAVÍA SIN HACER
-	private JPanel crearPanelPendiente(String texto) {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(new JLabel(texto, JLabel.CENTER), BorderLayout.CENTER);
-		return panel;
-	}
+	
  
 	// ACCIONES DE LOS BOTONES
 	private void anadirJugador() {
