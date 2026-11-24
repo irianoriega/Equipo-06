@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
  
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -30,6 +31,7 @@ import clase.Jugador;
 import clase.Partido;
 import clase.Posicion;
 import clase.TipoEntrenamiento;
+import util.GestorFotos;
 
 import javax.swing.BorderFactory;
 
@@ -81,7 +83,7 @@ public class VentanaDashboard extends JFrame {
 		this.entrenamientos = entrenamientos;
  
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(800, 520);
+		setSize(950, 650);
 		setLocationRelativeTo(null); // centrada en la pantalla
  
 		// Las pestañas
@@ -170,7 +172,7 @@ public class VentanaDashboard extends JFrame {
 		panel.add(panelArriba, BorderLayout.NORTH);
  
 		// Centro: tabla de jugadores
-		String[] columnas = { "Dorsal", "Nombre", "Posición", "Edad", "Altura (cm)", "Estado" };
+		String[] columnas = { "Dorsal", "Foto", "Nombre", "Posición", "Edad", "Altura (cm)", "Estado" };
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			private static final long serialVersionUID = 1L;
  
@@ -178,8 +180,21 @@ public class VentanaDashboard extends JFrame {
 			public boolean isCellEditable(int fila, int columna) {
 				return false; // la tabla es solo para ver, no se edita escribiendo en ella
 			}
+			
+			@Override
+			public Class<?> getColumnClass(int columna) {
+				if (columna == 1) {
+					return ImageIcon.class;
+				}
+				return super.getColumnClass(columna);
+			}
 		};
+		
 		tabla = new JTable(modeloTabla);
+		tabla.setRowHeight(80);
+		tabla.getColumnModel().getColumn(1).setPreferredWidth(90);
+		tabla.getColumnModel().getColumn(1).setMaxWidth(100);
+		
 		panel.add(new JScrollPane(tabla), BorderLayout.CENTER);
  
 		// Abajo: botones
@@ -318,6 +333,7 @@ public class VentanaDashboard extends JFrame {
 			seleccionado.setAltura(modificado.getAltura());
 			seleccionado.setPeso(modificado.getPeso());
 			seleccionado.setEstado(modificado.getEstado());
+			seleccionado.setRutaFoto(modificado.getRutaFoto());
 			actualizarTodo();
 		}
 	}
@@ -430,7 +446,7 @@ public class VentanaDashboard extends JFrame {
  
 			if (cumplePosicion && cumpleBusqueda) {
 				jugadoresMostrados.add(j);
-				modeloTabla.addRow(new Object[] { j.getDorsal(), j.getNombreCompleto(), j.getPosicion(), j.getEdad(),
+				modeloTabla.addRow(new Object[] { j.getDorsal(), GestorFotos.cargarIcono(j.getRutaFoto(), 70, 70), j.getNombreCompleto(), j.getPosicion(), j.getEdad(),
 						j.getAltura(), j.getEstado() });
 			}
 		}
