@@ -69,6 +69,7 @@ public class VentanaDashboard extends JFrame {
 	private JTable tablaEntrenamientos;
 	
 	// Estadísticas
+	private PanelEstadisticas panelEstadisticas;
 
 	// Enfermería
 	private DefaultListModel<String> modeloLesionados;
@@ -268,9 +269,8 @@ public class VentanaDashboard extends JFrame {
 	
 	// PESTAÑA ESTADÍSTICAS
 	private JPanel crearPanelEstadisticas() {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(new JLabel("Estadísticas del equipo", JLabel.CENTER), BorderLayout.CENTER);
-		return panel;
+		    panelEstadisticas = new PanelEstadisticas(jugadores, partidos, entrenamientos);
+		    return panelEstadisticas;
 	}
  
 	// PESTAÑA ENFERMERÍA
