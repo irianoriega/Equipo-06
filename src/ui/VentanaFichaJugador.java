@@ -1,22 +1,30 @@
 package ui;
  
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
- 
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
- 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import clase.EstadoJugador;
 import clase.Jugador;
 import clase.Posicion;
+import util.GestorFotos;
  
 /**
  * Ventana con la ficha de un jugador.
@@ -38,6 +46,9 @@ public class VentanaFichaJugador extends JDialog {
 	private JTextField txtAltura;
 	private JTextField txtPeso;
 	private JComboBox<EstadoJugador> cmbEstado;
+	private JLabel lblFoto;
+	private JButton btnSeleccionarFoto;
+	private String rutaFotoActual = null;
  
 	// Botones
 	private JButton btnGuardar;
@@ -64,8 +75,11 @@ public class VentanaFichaJugador extends JDialog {
 		// Si nos pasan un jugador, rellenamos el formulario con sus datos
 		if (jugador != null) {
 			idOriginal = jugador.getId();
+			rutaFotoActual = jugador.getRutaFoto();
 			rellenarFormulario(jugador);
 		}
+		
+		lblFoto.setIcon(GestorFotos.cargarIcono(rutaFotoActual, 120, 120));
  
 		// En modo ficha, no se puede editar nada
 		if (soloLectura) {
@@ -83,6 +97,21 @@ public class VentanaFichaJugador extends JDialog {
 		JLabel lblTitulo = new JLabel("Ficha del jugador", JLabel.CENTER);
 		lblTitulo.setBorder(new EmptyBorder(10, 10, 5, 10));
 		add(lblTitulo, BorderLayout.NORTH);
+		
+		//foto
+		JPanel panelFoto = new JPanel(new BorderLayout(5, 5));
+		panelFoto.setBorder(new EmptyBorder(10, 20, 10, 0));
+
+		lblFoto = new JLabel("", JLabel.CENTER);
+		lblFoto.setPreferredSize(new Dimension(120, 120));
+		lblFoto.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+		btnSeleccionarFoto = new JButton("Seleccionar foto");
+		btnSeleccionarFoto.addActionListener(e -> seleccionarFoto());
+
+		panelFoto.add(lblFoto, BorderLayout.CENTER);
+		panelFoto.add(btnSeleccionarFoto, BorderLayout.SOUTH);
+		add(panelFoto, BorderLayout.WEST);
  
 		// Panel central 7x2: formulario 
 		JPanel panelForm = new JPanel(new GridLayout(8, 2, 5, 8));
@@ -128,6 +157,23 @@ public class VentanaFichaJugador extends JDialog {
 		btnGuardar.addActionListener(e -> guardar());
 		btnCancelar.addActionListener(e -> dispose());
 	}
+	
+	private void seleccionarFoto() {
+		JFileChooser selector = new JFileChooser();
+		selector.setFileFilter(new FileNameExtensionFilter("Imágenes (JPG, PNG)", "jpg", "jpeg", "png"));
+
+		int opcion = selector.showOpenDialog(this);
+		if (opcion == JFileChooser.APPROVE_OPTION) {
+			try {
+				File archivoElegido = selector.getSelectedFile();
+				rutaFotoActual = GestorFotos.guardarFoto(archivoElegido);
+				lblFoto.setIcon(GestorFotos.cargarIcono(rutaFotoActual, 120, 120));
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(this, "No se pudo guardar la imagen.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
  
 	private void rellenarFormulario(Jugador j) {
 		txtNombre.setText(j.getNombre());
@@ -149,6 +195,7 @@ public class VentanaFichaJugador extends JDialog {
 		txtAltura.setEditable(false);
 		txtPeso.setEditable(false);
 		cmbEstado.setEnabled(false);
+		btnSeleccionarFoto.setVisible(false);
 		btnGuardar.setVisible(false); // en modo ficha no hay nada que guardar
 		btnCancelar.setText("Cerrar");
 	}
@@ -185,6 +232,7 @@ public class VentanaFichaJugador extends JDialog {
  
 			resultado = new Jugador(idOriginal, nombre, apellidos, dorsal, posicion, edad, altura, peso);
 			resultado.setEstado(estado);
+			resultado.setRutaFoto(rutaFotoActual);
 			dispose(); // todo correcto: cerramos la ventana
  
 		} catch (NumberFormatException ex) {

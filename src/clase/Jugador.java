@@ -10,6 +10,7 @@ public class Jugador {
 	    private double altura;
 	    private double peso;
 	    private EstadoJugador estado;
+	    private String rutaFoto;
 
 	    public Jugador(String string, int i, Posicion alero, int j, int k, int l, EstadoJugador lesionado) {
 	        estado = EstadoJugador.DISPONIBLE;
@@ -103,6 +104,14 @@ public class Jugador {
 
 	    public String getNombreCompleto() {
 	        return nombre + " " + apellidos;
+	    }
+	    
+	    public String getRutaFoto() {
+	    	return rutaFoto;
+	    }
+
+	    public void setRutaFoto(String rutaFoto) {
+	    	this.rutaFoto = rutaFoto;
 	    }
 
 	    @Override
