@@ -28,11 +28,7 @@ public class Main {
 		jugadores.add(new Jugador(3,"David", "Garcia", 7, Posicion.ALERO, 19, 195, 88, EstadoJugador.LESIONADO));
 		jugadores.add(new Jugador(4,"Pablo", "Martinez", 10, Posicion.ALA_PIVOT, 21, 200, 95, EstadoJugador.DISPONIBLE));
 		jugadores.add(new Jugador(5,"Ivan", "Torres", 15, Posicion.PIVOT, 23, 205, 102, EstadoJugador.DISPONIBLE));
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> branch 'main' of https://github.com/irianoriega/Equipo-06.git
 		// Partidos
 		List<Partido> partidos = new ArrayList<>();
 		Partido partido1 = new Partido(1, "CB Valencia", LocalDate.of(2026, 11, 22), LocalizacionPartido.LOCAL);
@@ -77,16 +73,9 @@ public class Main {
 		entrenamiento3.registrarAsistencia(jugadores.get(2));
 		entrenamiento3.registrarAsistencia(jugadores.get(4));
 		entrenamientos.add(entrenamiento3);
-<<<<<<< HEAD
-		
-		
-		SwingUtilities.invokeLater(() -> {
-			VentanaDashboard dashboard = new VentanaDashboard(jugadores, partidos, equipo, entrenamientos);
-=======
 
 		SwingUtilities.invokeLater(() -> {
 			VentanaDashboard dashboard = new VentanaDashboard(jugadores, partidos, equipo, entrenamientos);
->>>>>>> branch 'main' of https://github.com/irianoriega/Equipo-06.git
 			dashboard.setVisible(true);
 		});
 

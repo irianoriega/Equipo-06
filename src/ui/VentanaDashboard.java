@@ -247,10 +247,6 @@ public class VentanaDashboard extends JFrame {
 		//tabla partidos es una variable global, la utilizo en mi metodo
 		tablaPartidos = new JTable(modeloPartidos);
 		
-//		String[][] datos = new String[partidos.size()][4];
-		
-//		JTable tablaPartidos = new JTable(datos, columnas);
-		
 		//Añadir Resultados
 		JButton botonResultado = new JButton("Registrar resultado");
 		

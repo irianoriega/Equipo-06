@@ -9,7 +9,7 @@ public class Entrenamiento {
     private int id;
     private LocalDate fecha;
     private TipoEntrenamiento tipo;
-    private String descripcion;
+    private String observaciones;
     private List<Jugador> asistentes;
 
     public Entrenamiento() {
@@ -18,11 +18,11 @@ public class Entrenamiento {
 
     public Entrenamiento(int id, LocalDate fecha,
                          TipoEntrenamiento tipo,
-                         String descripcion) {
+                         String observaciones) {
         this.id = id;
         this.fecha = fecha;
         this.tipo = tipo;
-        this.descripcion = descripcion;
+        this.observaciones = observaciones;
         this.asistentes = new ArrayList<>();
     }
 
@@ -50,12 +50,12 @@ public class Entrenamiento {
         this.tipo = tipo;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public List<Jugador> getAsistentes() {
@@ -82,7 +82,7 @@ public class Entrenamiento {
                 "id=" + id +
                 ", fecha=" + fecha +
                 ", tipo=" + tipo +
-                ", descripcion='" + descripcion + '\'' +
+                ", observaciones='" + observaciones + '\'' +
                 ", asistentes=" + asistentes.size() +
                 '}';
     }

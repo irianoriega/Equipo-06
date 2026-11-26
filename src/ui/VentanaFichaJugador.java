@@ -60,10 +60,10 @@ public class VentanaFichaJugador extends JDialog {
 	private int idOriginal = 0;
  
 	public VentanaFichaJugador(JFrame padre, Jugador jugador, boolean soloLectura) {
-		super(padre, true); // true = ventana modal (bloquea la de atras)
+		super(padre, true); // true = ventana modal (bloquea la de atrás)
  
 		if (jugador == null) {
-			setTitle("Anadir jugador");
+			setTitle("Añadir jugador");
 		} else if (soloLectura) {
 			setTitle("Ficha de " + jugador.getNombreCompleto());
 		} else {
@@ -93,7 +93,7 @@ public class VentanaFichaJugador extends JDialog {
 	private void crearComponentes() {
 		setLayout(new BorderLayout());
  
-		// Panel de arriba: titulo
+		// Panel de arriba: título
 		JLabel lblTitulo = new JLabel("Ficha del jugador", JLabel.CENTER);
 		lblTitulo.setBorder(new EmptyBorder(10, 10, 5, 10));
 		add(lblTitulo, BorderLayout.NORTH);
@@ -132,7 +132,7 @@ public class VentanaFichaJugador extends JDialog {
 		panelForm.add(txtApellidos);
 		panelForm.add(new JLabel("Dorsal:"));
 		panelForm.add(txtDorsal);
-		panelForm.add(new JLabel("Posicion:"));
+		panelForm.add(new JLabel("Posición:"));
 		panelForm.add(cmbPosicion);
 		panelForm.add(new JLabel("Edad:"));
 		panelForm.add(txtEdad);
@@ -230,14 +230,14 @@ public class VentanaFichaJugador extends JDialog {
 			Posicion posicion = (Posicion) cmbPosicion.getSelectedItem();
 			EstadoJugador estado = (EstadoJugador) cmbEstado.getSelectedItem();
  
-			resultado = new Jugador(idOriginal, nombre, apellidos, dorsal, posicion, edad, altura, peso);
+			resultado = new Jugador(idOriginal, nombre, apellidos, dorsal, posicion, edad, altura, peso, estado);
 			resultado.setEstado(estado);
 			resultado.setRutaFoto(rutaFotoActual);
 			dispose(); // todo correcto: cerramos la ventana
  
 		} catch (NumberFormatException ex) {
-			// Se ejecuta si en un campo numerico hay letras o esta vacio
-			JOptionPane.showMessageDialog(this, "Dorsal, edad, altura y peso deben ser numeros.", "Error",
+			// Se ejecuta si en un campo numérico hay letras o está vacío
+			JOptionPane.showMessageDialog(this, "Dorsal, edad, altura y peso deben ser números.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
