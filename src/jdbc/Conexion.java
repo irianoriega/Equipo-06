@@ -1,4 +1,4 @@
-package db;
+package jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,7 +18,7 @@ public class Conexion {
 		// Con el driver cargado ya se pueden establecer conexiones a la BD
 
 		try {
-		    Connection conn = DriverManager.getConnection("jdbc:sqlite:src/db/hoopsmanager.db");
+		    Connection conn = DriverManager.getConnection("jdbc:sqlite:src/jdbc/hoopsmanager.db");
 		    
 		    // aquí podemos realizar operaciones con la base de datos
 

@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 
 public class GestorFotos {
 
-	private static final String RUTA_PLACEHOLDER = "/res/player.png"; //la imagen que sale cuando no la especificas
+	private static final String RUTA_PLACEHOLDER = "resources/images/player.png"; //la imagen que sale cuando no la especificas
 	private static final String CARPETA_FOTOS = "data/img";
 
 	public static String guardarFoto(File archivoOrigen) throws IOException {
@@ -38,9 +38,9 @@ public class GestorFotos {
 		}
 
 		if (icono == null || icono.getIconWidth() <= 0) {
-			URL urlPlaceholder = GestorFotos.class.getResource(RUTA_PLACEHOLDER);
-			if (urlPlaceholder != null) {
-				icono = new ImageIcon(urlPlaceholder);
+			File archivoPlaceholder = new File(RUTA_PLACEHOLDER);
+			if (archivoPlaceholder.exists()) {
+				icono = new ImageIcon(archivoPlaceholder.getAbsolutePath());
 			} else {
 				return null;
 			}
