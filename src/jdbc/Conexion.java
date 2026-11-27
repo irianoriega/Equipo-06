@@ -18,7 +18,7 @@ public class Conexion {
 		// Con el driver cargado ya se pueden establecer conexiones a la BD
 
 		try {
-		    Connection conn = DriverManager.getConnection("jdbc:sqlite:src/jdbc/hoopsmanager.db");
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:resources/db/hoopsmanager.db"); 
 		    
 		    // aquí podemos realizar operaciones con la base de datos
 

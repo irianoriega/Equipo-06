@@ -31,6 +31,7 @@ import clase.Jugador;
 import clase.Partido;
 import clase.Posicion;
 import clase.TipoEntrenamiento;
+import jdbc.GestorBD;
 import util.GestorFotos;
 
 import javax.swing.BorderFactory;
@@ -350,9 +351,16 @@ public class VentanaDashboard extends JFrame {
 
 	    JPanel panelArriba = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 	    JButton btnAnadirEntrenamiento = new JButton("Añadir entrenamiento");
+	    JButton btnModificarEntrenamiento = new JButton("Modificar");
+	    JButton btnEliminarEntrenamiento = new JButton("Eliminar");
 	    panelArriba.add(btnAnadirEntrenamiento);
+	    panelArriba.add(btnModificarEntrenamiento);
+	    panelArriba.add(btnEliminarEntrenamiento);
 	    panel.add(panelArriba, BorderLayout.NORTH);
+
 	    btnAnadirEntrenamiento.addActionListener(e -> anadirEntrenamiento());
+	    btnModificarEntrenamiento.addActionListener(e -> modificarEntrenamiento());
+	    btnEliminarEntrenamiento.addActionListener(e -> eliminarEntrenamiento());
 	    return panel;
 	}
 	
@@ -378,7 +386,6 @@ public class VentanaDashboard extends JFrame {
 		return panel;
 	}
  
-	
  
 	// ACCIONES DE LOS BOTONES
 	private void anadirJugador() {
@@ -454,27 +461,92 @@ public class VentanaDashboard extends JFrame {
 	}
 	
 	private void anadirEntrenamiento() {
-		int id = entrenamientos.size()+1;
-		String txtFecha = JOptionPane.showInputDialog(this, "Fecha");
-		LocalDate fecha = LocalDate.parse(txtFecha);
-		
-		JComboBox<TipoEntrenamiento> cmbTipoEntrenamiento = new JComboBox<>(TipoEntrenamiento.values());
-		Object[] cuadrado = {
-				"Tipo de entrenamiento",
-				cmbTipoEntrenamiento
-		};
-		JOptionPane.showMessageDialog(this, cuadrado, "Tipo", JOptionPane.QUESTION_MESSAGE);
-		TipoEntrenamiento tipo = (TipoEntrenamiento) cmbTipoEntrenamiento.getSelectedItem();
-		
-		String txtObservaciones = JOptionPane.showInputDialog(this, "Observaciones");
-		
-		Entrenamiento entrenamiento = new Entrenamiento(id, fecha, tipo, txtObservaciones);
-		entrenamientos.add(entrenamiento);
-		actualizarTodo();
-	}
+		// En los entrenamientos, primero se cambia la BD y, solo si ha ido bien,
+		// se cambia la lista en memoria. Así las dos nunca quedan distintas.
+
+			VentanaEntrenamiento formulario = new VentanaEntrenamiento(this, null);
+			formulario.setVisible(true); // el programa se queda aquí hasta que se cierra el formulario
+
+			Entrenamiento nuevo = formulario.getResultado();
+			if (nuevo == null) {
+				return; // se ha pulsado Cancelar
+			}
+
+			if (GestorBD.insertarEntrenamiento(nuevo)) { // además le pone el id que genera la BD
+				entrenamientos.add(nuevo);
+				actualizarTodo();
+			} else {
+				mostrarErrorBD("guardar el entrenamiento");
+			}
+		}
+
+		private void modificarEntrenamiento() {
+			Entrenamiento seleccionado = getEntrenamientoSeleccionado();
+			if (seleccionado == null) {
+				return;
+			}
+
+			VentanaEntrenamiento formulario = new VentanaEntrenamiento(this, seleccionado);
+			formulario.setVisible(true);
+
+			Entrenamiento modificado = formulario.getResultado(); // tiene el mismo id que el seleccionado
+			if (modificado == null) {
+				return;
+			}
+
+			if (GestorBD.actualizarEntrenamiento(modificado)) {
+				// Copiamos los datos nuevos al objeto original (así conserva sus asistentes)
+				seleccionado.setFecha(modificado.getFecha());
+				seleccionado.setTipo(modificado.getTipo());
+				seleccionado.setObservaciones(modificado.getObservaciones());
+				actualizarTodo();
+			} else {
+				mostrarErrorBD("modificar el entrenamiento");
+			}
+		}
+
+		private void eliminarEntrenamiento() {
+			Entrenamiento seleccionado = getEntrenamientoSeleccionado();
+			if (seleccionado == null) {
+				return;
+			}
+
+			int respuesta = JOptionPane.showConfirmDialog(this,
+					"¿Seguro que quieres eliminar el entrenamiento del " + seleccionado.getFecha() + "?", "Confirmar",
+					JOptionPane.YES_NO_OPTION);
+
+			if (respuesta == JOptionPane.YES_OPTION) {
+				if (GestorBD.eliminarEntrenamiento(seleccionado.getId())) {
+					entrenamientos.remove(seleccionado);
+					actualizarTodo();
+				} else {
+					mostrarErrorBD("eliminar el entrenamiento");
+				}
+			}
+		}
+	
  
 	// MÉTODOS AUXILIARES
+		
+		
+		/** Devuelve el entrenamiento de la fila seleccionada, o null (con aviso) si no hay ninguna. */
+		private Entrenamiento getEntrenamientoSeleccionado() {
+			int fila = tablaEntrenamientos.getSelectedRow();
+			if (fila == -1) {
+				JOptionPane.showMessageDialog(this, "Selecciona primero un entrenamiento de la tabla.", "Aviso",
+						JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
+			// La tabla se rellena en el mismo orden que la lista, así que la fila coincide con la posición
+			return entrenamientos.get(fila);
+		}
 
+		/** Muestra un mensaje de error cuando falla una operación con la base de datos. */
+		private void mostrarErrorBD(String accion) {
+			JOptionPane.showMessageDialog(this, "No se ha podido " + accion + " en la base de datos.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}	
+	
 	/** Devuelve el jugador de la fila seleccionada, o null (con aviso) si no hay ninguna. */
 	private Jugador getJugadorSeleccionado() { 
 		int fila = tabla.getSelectedRow();

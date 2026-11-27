@@ -55,6 +55,8 @@ public class VentanaInicio extends JFrame {
 	
 	
 //creamos la ventana principal
+
+
 	public VentanaInicio(List<Jugador> jugadores, List<Partido> partidos, Equipo equipo,
 			List<Entrenamiento> entrenamientos) {
 		super();
