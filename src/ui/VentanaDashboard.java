@@ -1,12 +1,10 @@
 package ui;
  
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
  
 import javax.swing.DefaultListModel;
@@ -45,6 +43,9 @@ public class VentanaDashboard extends JFrame {
 	private List<Partido> partidos;
 	private Equipo equipo;
 	private List<Entrenamiento> entrenamientos;
+	
+	// Pestañas (es atributo para poder elegir la pestaña desde VentanaInicio)
+	private JTabbedPane pestanas;
 	 
 	// Inicio
 	private JLabel lblPartidoEquipos;
@@ -90,7 +91,7 @@ public class VentanaDashboard extends JFrame {
 		setLocationRelativeTo(null); // centrada en la pantalla
  
 		// Las pestañas
-		JTabbedPane pestanas = new JTabbedPane();
+		pestanas = new JTabbedPane();
 		pestanas.addTab("Inicio", crearPanelInicio());
 		pestanas.addTab("Roster", crearPanelRoster());
 		pestanas.addTab("Calendario", crearPanelCalendario());
@@ -103,6 +104,11 @@ public class VentanaDashboard extends JFrame {
 		actualizarTodo();
 	}
  
+	/** Muestra la pestaña indicada (0 = Inicio, 1 = Roster, 2 = Calendario, ...). */
+	public void seleccionarPestana(int indice) {
+		pestanas.setSelectedIndex(indice);
+	}
+
 	// PESTAÑA INICIO
 	private JPanel crearPanelInicio() {
 		JPanel panel = new JPanel(new BorderLayout(10, 10));
@@ -603,4 +609,3 @@ public class VentanaDashboard extends JFrame {
 		}
 	}
 }
- 

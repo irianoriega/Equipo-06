@@ -75,8 +75,8 @@ public class Main {
 		entrenamientos.add(entrenamiento3);
 
 		SwingUtilities.invokeLater(() -> {
-			VentanaDashboard dashboard = new VentanaDashboard(jugadores, partidos, equipo, entrenamientos);
-			dashboard.setVisible(true);
+			VentanaInicio inicio = new VentanaInicio(jugadores, partidos, equipo, entrenamientos);
+			inicio.setVisible(true);
 		});
 
 	}
